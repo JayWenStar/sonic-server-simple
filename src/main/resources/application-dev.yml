@@ -33,7 +33,7 @@ spring:
     host: 81.70.118.76
     port: 5672
     username: sonic
-    password: 106718827Chen
+    password: sonic
     virtual-host: sonic
   quartz:
     properties:
