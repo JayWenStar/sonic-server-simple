@@ -30,10 +30,10 @@ spring:
           default-requeue-rejected: true
     publisher-confirm-type: correlated
     publisher-returns: true
-    host: localhost
+    host: 81.70.118.76
     port: 5672
     username: sonic
-    password: sonic
+    password: 106718827Chen
     virtual-host: sonic
   quartz:
     properties:
