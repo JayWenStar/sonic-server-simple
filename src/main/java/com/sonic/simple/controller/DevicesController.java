@@ -39,7 +39,6 @@ public class DevicesController {
         }
     }
 
-    // todo 加到postman中
     @WebAspect
     @ApiOperation(value = "修改设备图片", notes = "修改对应设备id的图片")
     @PutMapping("/updateImg")
