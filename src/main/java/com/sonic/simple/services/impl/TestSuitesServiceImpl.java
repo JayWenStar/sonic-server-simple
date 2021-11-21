@@ -11,7 +11,6 @@ import com.sonic.simple.models.interfaces.CoverType;
 import com.sonic.simple.models.interfaces.DeviceStatus;
 import com.sonic.simple.models.interfaces.ResultStatus;
 import com.sonic.simple.services.*;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
