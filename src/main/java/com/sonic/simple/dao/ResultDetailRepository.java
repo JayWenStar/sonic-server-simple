@@ -34,4 +34,9 @@ public interface ResultDetailRepository extends JpaRepository<ResultDetail, Inte
 
     @Transactional
     void deleteByResultId(int resultId);
+
+    ResultDetail findByResultId(int resultId);
+
+    @Transactional
+    void deleteAllByResultIdAndTypeAndCaseIdAndDeviceId(int resultId, String type, int caseId, int deviceId);
 }

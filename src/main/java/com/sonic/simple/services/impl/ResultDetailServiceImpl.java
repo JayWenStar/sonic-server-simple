@@ -12,6 +12,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 
 import javax.persistence.criteria.Order;
 import javax.persistence.criteria.Predicate;
@@ -50,6 +51,16 @@ public class ResultDetailServiceImpl implements ResultDetailService {
         resultInfo.setCaseId(jsonMsg.getInteger("cid"));
         resultInfo.setTime(jsonMsg.getDate("time"));
         resultInfo.setDeviceId(resultDevice == null ? 0 : resultDevice.getId());
+
+        if (resultInfo.getType().equals("status")) {
+            resultDetailRepository.deleteAllByResultIdAndTypeAndCaseIdAndDeviceId(
+                    resultInfo.getResultId(),
+                    resultInfo.getType(),
+                    resultInfo.getCaseId(),
+                    resultInfo.getDeviceId()
+            );
+        }
+
         save(resultInfo);
         if (jsonMsg.getString("msg").equals("status")) {
             resultsService.suiteResult(jsonMsg.getInteger("rid"));

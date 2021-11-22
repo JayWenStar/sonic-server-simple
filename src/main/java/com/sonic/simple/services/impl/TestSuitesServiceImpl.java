@@ -2,6 +2,7 @@ package com.sonic.simple.services.impl;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.sonic.simple.config.RocketMQConfig;
 import com.sonic.simple.models.http.RespEnum;
 import com.sonic.simple.models.http.RespModel;
 import com.sonic.simple.dao.GlobalParamsRepository;
@@ -11,6 +12,7 @@ import com.sonic.simple.models.interfaces.CoverType;
 import com.sonic.simple.models.interfaces.DeviceStatus;
 import com.sonic.simple.models.interfaces.ResultStatus;
 import com.sonic.simple.services.*;
+import org.apache.rocketmq.spring.core.RocketMQTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -41,7 +43,9 @@ public class TestSuitesServiceImpl implements TestSuitesService {
     @Autowired
     private GlobalParamsRepository globalParamsRepository;
     @Autowired
-    private RabbitTemplate rabbitTemplate;
+    private RocketMQTemplate rocketMQTemplate;
+    @Autowired
+    private RocketMQConfig rocketMQConfig;
 
     @Override
     public RespModel runSuite(int suiteId, String strike) {
@@ -64,7 +68,7 @@ public class TestSuitesServiceImpl implements TestSuitesService {
             return new RespModel(3003, "所选设备暂无可用！");
         }
         Results results = new Results();
-        results.setStatus(ResultStatus.RUNNING);
+        results.setStatus(ResultStatus.DISTRIBUTING);
         results.setSuiteId(suiteId);
         results.setSuiteName(testSuites.getName());
         results.setStrike(strike);
@@ -92,6 +96,8 @@ public class TestSuitesServiceImpl implements TestSuitesService {
             }
         }
         int deviceIndex = 0;
+
+        // 用例覆盖
         if (testSuites.getCover() == CoverType.CASE) {
             for (TestCases testCases : testSuites.getTestCases()) {
                 JSONObject suite = new JSONObject();
@@ -125,9 +131,16 @@ public class TestSuitesServiceImpl implements TestSuitesService {
                 suite.put("key", key);
                 suite.put("wait", 0);
                 suite.put("msg", "suite");
-                rabbitTemplate.convertAndSend("MsgDirectExchange", suite.getString("key"), suite);
+
+                // todo 改造事务消息
+                rocketMQTemplate.convertAndSend(
+                        rocketMQConfig.getTopic().getTestTaskTopicWithTag(suite.getString("key")),
+                        suite
+                );
             }
         }
+
+        // 设备覆盖
         if (testSuites.getCover() == CoverType.DEVICE) {
             for (TestCases testCases : testSuites.getTestCases()) {
                 JSONObject suite = new JSONObject();
@@ -156,7 +169,14 @@ public class TestSuitesServiceImpl implements TestSuitesService {
                     suite.put("key", key);
                     suite.put("wait", 0);
                     suite.put("msg", "suite");
-                    rabbitTemplate.convertAndSend("MsgDirectExchange", suite.getString("key"), suite);
+
+                    // todo 事务消息
+                    rocketMQTemplate.convertAndSend(
+                            rocketMQConfig.getTopic().getTestTaskTopicWithTag(suite.getString("key")),
+                            suite
+                    );
+                    // todo 确认无误后删除
+                    // rabbitTemplate.convertAndSend("MsgDirectExchange", suite.getString("key"), suite);
                 }
             }
         }

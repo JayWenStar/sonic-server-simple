@@ -285,12 +285,15 @@ public class ResultsServiceImpl implements ResultsService {
         int failCount = 0;
         int sucCount = 0;
         int warnCount = 0;
+        int runningCount = 0;
         int status;
         for (ResultDetail resultDetail : resultDetailList) {
             if (resultDetail.getStatus() == ResultDetailStatus.FAIL) {
                 failCount++;
             } else if (resultDetail.getStatus() == ResultDetailStatus.WARN) {
                 warnCount++;
+            } else if (resultDetail.getStatus() == ResultDetailStatus.RUNNING) {
+                runningCount++;
             } else {
                 sucCount++;
             }
@@ -299,12 +302,14 @@ public class ResultsServiceImpl implements ResultsService {
             status = ResultStatus.FAIL;
         } else if (warnCount > 0) {
             status = ResultStatus.WARNING;
-        } else {
+        } else if (runningCount > 0) {
+            status = ResultStatus.RUNNING;
+        } else  {
             status = ResultStatus.PASS;
         }
         //状态赋予等级最高的
-        results.setStatus(status > results.getStatus() ? status : results.getStatus());
-        if (results.getSendMsgCount() < 1 && sucCount == 0 && failCount == 0 && warnCount == 0) {
+        results.setStatus(Math.max(status, results.getStatus()));
+        if (results.getSendMsgCount() < 1 && sucCount == 0 && failCount == 0 && warnCount == 0 && runningCount == 0) {
             delete(results.getId());
         } else {
             save(results);

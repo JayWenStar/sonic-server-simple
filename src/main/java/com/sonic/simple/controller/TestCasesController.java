@@ -121,7 +121,6 @@ public class TestCasesController {
     @ApiImplicitParam(name = "ids[]", value = "id列表", dataTypeClass = Integer.class)
     @GetMapping("/findByIdIn")
     public RespModel<List<TestCases>> findByIdIn(@RequestParam(name = "ids[]") List<Integer> ids) {
-        return new RespModel(RespEnum.SEARCH_OK,
-                testCasesService.findByIdIn(ids));
+        return new RespModel(RespEnum.SEARCH_OK, testCasesService.findByIdIn(ids));
     }
 }

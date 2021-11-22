@@ -92,8 +92,7 @@ public class DevicesController {
     @ApiImplicitParam(name = "ids[]", value = "id列表", dataTypeClass = Integer.class)
     @GetMapping("/findByIdIn")
     public RespModel<List<Devices>> findByIdIn(@RequestParam(name = "ids[]") List<Integer> ids) {
-        return new RespModel(RespEnum.SEARCH_OK,
-                devicesService.findByIdIn(ids));
+        return new RespModel(RespEnum.SEARCH_OK, devicesService.findByIdIn(ids));
     }
 
     @WebAspect

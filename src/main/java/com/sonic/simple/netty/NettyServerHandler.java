@@ -52,9 +52,6 @@ public class NettyServerHandler extends ChannelInboundHandlerAdapter {
                 jsonMsg.remove("msg");
                 agentsService.save(jsonMsg);
                 break;
-            case "subResultCount":
-                resultsService.subResultCount(jsonMsg.getInteger("rid"));
-                break;
             case "deviceDetail":
                 devicesService.deviceStatus(jsonMsg);
                 break;
@@ -63,20 +60,6 @@ public class NettyServerHandler extends ChannelInboundHandlerAdapter {
             case "record":
             case "status":
                 resultDetailService.saveByTransport(jsonMsg);
-                break;
-            case "findSteps":
-                JSONObject j = testCasesService.findSteps(jsonMsg.getInteger("caseId"));
-                if (j != null) {
-                    JSONObject steps = new JSONObject();
-                    steps.put("msg", "runStep");
-                    steps.put("pf", j.get("pf"));
-                    steps.put("steps", j.get("steps"));
-                    steps.put("gp", j.get("gp"));
-                    steps.put("sessionId", jsonMsg.getString("sessionId"));
-                    steps.put("pwd", jsonMsg.getString("pwd"));
-                    steps.put("udId", jsonMsg.getString("udId"));
-                    NettyServer.getMap().get(jsonMsg.getInteger("agentId")).writeAndFlush(steps.toJSONString());
-                }
                 break;
         }
     }
