@@ -9,7 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.Message;
 
 /**
- * todo 测试任务 本地事务
+ *
+ *
  *
  * @author chenwenjie.star
  * @date 2021/11/22 8:17 下午

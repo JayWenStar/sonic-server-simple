@@ -1,7 +1,7 @@
 version: '3'
 services:
   sonic-server-simple:
-    image: "zhouyixun/sonic-server-simple:v1.2.0-beta1"
+    image: "zhouyixun/sonic-server-simple:v1.2.0-beta3"
     environment:
       #以下均为默认配置，如果更换为自己的数据源才改
       - REDIS_DATABASE=0

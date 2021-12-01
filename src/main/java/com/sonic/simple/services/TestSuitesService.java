@@ -1,8 +1,8 @@
 package com.sonic.simple.services;
 
 
-import com.sonic.simple.models.http.RespModel;
 import com.sonic.simple.models.TestSuites;
+import com.sonic.simple.models.http.RespModel;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -14,6 +14,8 @@ import java.util.List;
  * @date 2021/8/20 17:51
  */
 public interface TestSuitesService {
+
+    @Deprecated
     RespModel runSuite(int id, String strike);
 
     TestSuites findById(int id);
