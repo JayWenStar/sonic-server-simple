@@ -11,6 +11,7 @@ import com.sonic.simple.models.*;
 import com.sonic.simple.models.interfaces.CoverType;
 import com.sonic.simple.models.interfaces.DeviceStatus;
 import com.sonic.simple.models.interfaces.ResultStatus;
+import com.sonic.simple.netty.NettyServer;
 import com.sonic.simple.services.*;
 import org.apache.rocketmq.spring.core.RocketMQTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.ObjectUtils;
 
 import javax.persistence.criteria.Predicate;
 import java.util.*;
@@ -175,12 +178,17 @@ public class TestSuitesServiceImpl implements TestSuitesService {
                             rocketMQConfig.getTopic().getTestTaskTopicWithTag(suite.getString("key")),
                             suite
                     );
-                    // todo 确认无误后删除
-                    // rabbitTemplate.convertAndSend("MsgDirectExchange", suite.getString("key"), suite);
                 }
             }
         }
         return new RespModel(RespEnum.HANDLE_OK);
+    }
+
+    @Transactional
+    @Override
+    public RespModel<String> forceStopSuite(int resultId, String strike) {
+        // todo 需要完善远程调用后才支持
+        return null;
     }
 
     @Override

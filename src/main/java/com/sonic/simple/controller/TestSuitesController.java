@@ -47,6 +47,23 @@ public class TestSuitesController {
     }
 
     @WebAspect
+    @ApiOperation(value = "停止测试套件运行", notes = "停止测试套件运行")
+    @ApiImplicitParam(name = "resultId", value = "测试结果Id", dataTypeClass = Integer.class)
+    @GetMapping("/forceStopSuite")
+    public RespModel<String> forceStopSuite(@RequestParam(name = "resultId") int resultId
+            , HttpServletRequest request) {
+        String strike = "SYSTEM";
+        if (request.getHeader("SonicToken") != null) {
+            String token = request.getHeader("SonicToken");
+            String userName = jwtTokenTool.getUserName(token);
+            if (userName != null) {
+                strike = userName;
+            }
+        }
+        return testSuitesService.forceStopSuite(resultId, strike);
+    }
+
+    @WebAspect
     @ApiOperation(value = "删除测试套件", notes = "删除指定id的测试套件")
     @ApiImplicitParam(name = "id", value = "测试套件id", dataTypeClass = Integer.class)
     @DeleteMapping
@@ -74,8 +91,9 @@ public class TestSuitesController {
             , @RequestParam(name = "name") String name
             , @RequestParam(name = "page") int page
             , @RequestParam(name = "pageSize") int pageSize) {
-        Pageable pageable = PageRequest.of(page - 1, pageSize);
-        return new RespModel(RespEnum.SEARCH_OK, testSuitesService.findByProjectId(projectId, name, pageable));
+        // Pageable pageable = PageRequest.of(page - 1, pageSize);
+        // return new RespModel(RespEnum.SEARCH_OK, testSuitesService.findByProjectId(projectId, name, pageable));
+        return new RespModel(RespEnum.SERVICE_NOT_FOUND, "暂未完善，需要远程调用后才加上");
     }
 
     @WebAspect
