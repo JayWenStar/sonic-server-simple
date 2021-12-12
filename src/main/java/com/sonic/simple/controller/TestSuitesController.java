@@ -63,6 +63,7 @@ public class TestSuitesController {
         return testSuitesService.forceStopSuite(resultId, strike);
     }
 
+
     @WebAspect
     @ApiOperation(value = "删除测试套件", notes = "删除指定id的测试套件")
     @ApiImplicitParam(name = "id", value = "测试套件id", dataTypeClass = Integer.class)
@@ -91,9 +92,8 @@ public class TestSuitesController {
             , @RequestParam(name = "name") String name
             , @RequestParam(name = "page") int page
             , @RequestParam(name = "pageSize") int pageSize) {
-        // Pageable pageable = PageRequest.of(page - 1, pageSize);
-        // return new RespModel(RespEnum.SEARCH_OK, testSuitesService.findByProjectId(projectId, name, pageable));
-        return new RespModel(RespEnum.SERVICE_NOT_FOUND, "暂未完善，需要远程调用后才加上");
+        Pageable pageable = PageRequest.of(page - 1, pageSize);
+        return new RespModel(RespEnum.SEARCH_OK, testSuitesService.findByProjectId(projectId, name, pageable));
     }
 
     @WebAspect
